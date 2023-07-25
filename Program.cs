@@ -68,6 +68,7 @@ namespace Confiote
                         string end = (string)arg.Data.Options.FirstOrDefault(x => x.Name == "end")!.Value;
                         string link = (string)arg.Data.Options.FirstOrDefault(x => x.Name == "link")!.Value;
 
+                        // Create category and channels
                         var cat = await guildChan.Guild.CreateCategoryAsync(name);
                         var info = await guildChan.Guild.CreateTextChannelAsync("info", p =>
                         {
@@ -78,10 +79,17 @@ namespace Confiote
                             p.CategoryId = cat.Id;
                         });
 
+                        // Create event
                         var e = await guildChan.Guild.CreateEventAsync(name, DateTime.Parse(start), GuildScheduledEventType.External, endTime: DateTime.Parse(end), location: link);
 
-                        await guildChan.Guild.CreateRoleAsync(name, null, null, false, null); // TODO: Somehow I have to precise the default arguments?
+                        // Create associated role
+                        var role = await guildChan.Guild.CreateRoleAsync(name, null, null, false, null);
 
+                        // Set channel permissions
+                        await cat.AddPermissionOverwriteAsync(guildChan.Guild.EveryoneRole, new(viewChannel: PermValue.Deny));
+                        await cat.AddPermissionOverwriteAsync(role, new(viewChannel: PermValue.Allow, manageChannel: PermValue.Allow, manageMessages: PermValue.Allow));
+
+                        // Send important info in #info channel
                         await info.SendMessageAsync(link);
                         await info.SendMessageAsync($"https://discord.com/events/{e.GuildId}/{e.Id}");
 
