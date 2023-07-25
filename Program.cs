@@ -83,7 +83,7 @@ namespace Confiote
                         await guildChan.Guild.CreateRoleAsync(name, null, null, false, null); // TODO: Somehow I have to precise the default arguments?
 
                         await info.SendMessageAsync(link);
-                        //await info.SendMessageAsync(e.);
+                        await info.SendMessageAsync($"https://discord.com/events/{e.GuildId}/{e.Id}");
 
                         await arg.RespondAsync("Event created!");
                         break;
