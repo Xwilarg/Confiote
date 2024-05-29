@@ -93,7 +93,7 @@ namespace Confiote
                         await info.SendMessageAsync(link);
                         await info.SendMessageAsync($"https://discord.com/events/{e.GuildId}/{e.Id}");
 
-                        await arg.RespondAsync("Event created!");
+                        await arg.FollowupAsync("Event created!");
                         break;
 
                     case "ping":
